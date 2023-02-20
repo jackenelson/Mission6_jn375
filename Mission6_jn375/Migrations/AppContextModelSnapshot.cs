@@ -15,15 +15,50 @@ namespace Mission6_jn375.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.32");
 
+            modelBuilder.Entity("Mission6_jn375.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Action"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Drama"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Thriller"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Comedy"
+                        });
+                });
+
             modelBuilder.Entity("Mission6_jn375.Models.ModelClass", b =>
                 {
                     b.Property<int>("MovieId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -52,13 +87,15 @@ namespace Mission6_jn375.Migrations
 
                     b.HasKey("MovieId");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("MovieInputs");
 
                     b.HasData(
                         new
                         {
                             MovieId = 1,
-                            Category = "Action",
+                            CategoryId = 1,
                             Director = "Kevin Reynolds",
                             Edited = true,
                             LentTo = "",
@@ -70,7 +107,7 @@ namespace Mission6_jn375.Migrations
                         new
                         {
                             MovieId = 2,
-                            Category = "Animated",
+                            CategoryId = 2,
                             Director = "Adrian Molina",
                             Edited = true,
                             LentTo = "",
@@ -82,7 +119,7 @@ namespace Mission6_jn375.Migrations
                         new
                         {
                             MovieId = 3,
-                            Category = "Animated",
+                            CategoryId = 3,
                             Director = "Kelly Asbury",
                             Edited = true,
                             LentTo = "",
@@ -91,6 +128,15 @@ namespace Mission6_jn375.Migrations
                             Title = "Spirit",
                             Year = 2002
                         });
+                });
+
+            modelBuilder.Entity("Mission6_jn375.Models.ModelClass", b =>
+                {
+                    b.HasOne("Mission6_jn375.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

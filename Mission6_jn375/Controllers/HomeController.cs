@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission6_jn375.Models;
 using System;
@@ -12,12 +13,12 @@ namespace Mission6_jn375.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
 
         private AppContext _blahContext { get; set; }
-        public HomeController(ILogger<HomeController> logger, AppContext someName)
+        public HomeController(AppContext someName)
         {
-            _logger = logger;
+          
             _blahContext = someName;
         }
 
@@ -28,6 +29,7 @@ namespace Mission6_jn375.Controllers
         [HttpGet]
         public IActionResult Index1()
         {
+            ViewBag.Categories = _blahContext.Categories.ToList();
             return View();
         }
         [HttpPost]
@@ -39,17 +41,59 @@ namespace Mission6_jn375.Controllers
                 _blahContext.SaveChanges();
                 return View("Index2", ar);
             }
-            return View("Index1");
+            else
+            {
+                ViewBag.Categories = _blahContext.Categories.ToList();
+                return View();
+            }
+            
         }
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Index3()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var apps = _blahContext.MovieInputs
+                .Include(x => x.Category)
+                //.Where( x => x.Edited == false)
+                .OrderBy(x => x.Title)
+                .ToList();
+            return View(apps);
         }
+
+        [HttpGet]
+        public IActionResult Edit(int movieid)
+        {
+            ViewBag.Categories = _blahContext.Categories.ToList();
+
+            var application = _blahContext.MovieInputs.Single(x => x.MovieId == movieid);
+            return View("Index1", application);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(ModelClass blah)
+        {
+            _blahContext.Update(blah);
+            _blahContext.SaveChanges();
+            return RedirectToAction("Index3");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int movieid)
+        {
+            var application = _blahContext.MovieInputs.Single(x => x.MovieId == movieid);
+            return View(application);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(ModelClass ar)
+        {
+            _blahContext.Remove(ar);
+            _blahContext.SaveChanges();
+            return RedirectToAction("Index3");
+        }
+
     }
 }

@@ -15,15 +15,22 @@ namespace Mission6_jn375.Models
         }
 
         public DbSet<ModelClass> MovieInputs { get; set; }
-
+        public DbSet<Category> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder mb)
         {
+
+            mb.Entity<Category>().HasData(
+                new Category { CategoryId = 1, CategoryName = "Action" },
+                new Category { CategoryId = 2, CategoryName = "Drama" },
+                new Category { CategoryId = 3, CategoryName = "Thriller" },
+                new Category { CategoryId = 4, CategoryName = "Comedy" }
+                );
             mb.Entity<ModelClass>().HasData(
                 new ModelClass
                 {
                     MovieId = 1,
                     Title = "Count of Monte Cristo",
-                    Category = "Action",
+                    CategoryId = 1,
                     Year = 2002,
                     Director = "Kevin Reynolds",
                     Rating = "PG-13",
@@ -35,7 +42,7 @@ namespace Mission6_jn375.Models
                 {
                     MovieId = 2,
                     Title = "Coco",
-                    Category = "Animated",
+                    CategoryId = 2,
                     Year = 2017,
                     Director = "Adrian Molina",
                     Rating = "PG",
@@ -49,7 +56,7 @@ namespace Mission6_jn375.Models
                 {
                     MovieId = 3,
                     Title = "Spirit",
-                    Category = "Animated",
+                    CategoryId = 3,
                     Year = 2002,
                     Director = "Kelly Asbury",
                     Rating = "G",

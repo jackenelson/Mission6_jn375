@@ -13,8 +13,7 @@ namespace Mission6_jn375.Models
         public int MovieId { get; set; }
         [Required]
         public string Title { get; set; }
-        [Required]
-        public string Category { get; set; }
+        
         [Required]
         public int Year { get; set; }
         [Required]
@@ -25,5 +24,9 @@ namespace Mission6_jn375.Models
         public bool Edited { get; set; }
         [MaxLength(25)]
         public string Notes { get; set; }
+
+        [Required]
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }
